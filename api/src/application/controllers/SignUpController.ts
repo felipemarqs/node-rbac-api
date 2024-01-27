@@ -9,13 +9,12 @@ const schema = z.object({
 });
 
 export class SignUpController implements IController {
+  constructor(private readonly signUpUseCase: SignUpUseCase) {}
   async handle({ body }: IRequest): Promise<IResponse> {
     try {
       const { name, email, password } = schema.parse(body);
 
-      const signUpUseCase = new SignUpUseCase();
-
-      signUpUseCase.execute({ name, email, password });
+      await this.signUpUseCase.execute({ name, email, password });
 
       return { statusCode: 204, body: null };
     } catch (error) {
