@@ -11,6 +11,11 @@ export const middlewareAdapter = (middleware: IMiddleware) => {
       return response.status(result.statusCode).json(result.body);
     }
 
+    request.metadata = {
+      ...request.metadata,
+      ...result.data,
+    };
+
     next();
   };
 };
