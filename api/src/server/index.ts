@@ -1,18 +1,15 @@
-import express, { response } from "express";
-import { SignUpUseCase } from "../application/useCases/SignUpUseCase";
+import express from "express";
 import { SignInUseCase } from "../application/useCases/SignInUseCase";
 
-import { SignUpController } from "../application/controllers/SignUpController";
 import { SignInController } from "../application/controllers/SignInController";
+import { makeSignUpController } from "../factories/makeSignUpController";
 
 const app = express();
 
 app.use(express.json());
 
 app.post("/sign-up", async (request, response) => {
-  const SALT = 10;
-  const signUpUseCase = new SignUpUseCase(SALT);
-  const signUpController = new SignUpController(signUpUseCase);
+  const signUpController = makeSignUpController();
 
   const { statusCode, body } = await signUpController.handle({
     body: request.body,
