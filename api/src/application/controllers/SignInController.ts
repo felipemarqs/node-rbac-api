@@ -19,8 +19,7 @@ export class SignInController implements IController {
         email,
         password,
       });
-
-      return { statusCode: 204, body: { accessToken } };
+      return { statusCode: 200, body: { accessToken } };
     } catch (error) {
       if (error instanceof ZodError) {
         return { statusCode: 400, body: error.issues };

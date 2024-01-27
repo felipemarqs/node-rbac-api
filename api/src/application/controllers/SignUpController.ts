@@ -17,7 +17,7 @@ export class SignUpController implements IController {
 
       await this.signUpUseCase.execute({ name, email, password });
 
-      return { statusCode: 204, body: null };
+      return { statusCode: 201, body: null };
     } catch (error) {
       if (error instanceof ZodError) {
         return { statusCode: 400, body: error.issues };
