@@ -1,9 +1,12 @@
+import { verify } from "jsonwebtoken";
+
 import {
   IData,
   IMiddleware,
   IRequest,
   IResponse,
 } from "../interfaces/IMiddleware";
+import { env } from "../config/env";
 
 export class AuthenticationMiddleware implements IMiddleware {
   async handle({ headers }: IRequest): Promise<IResponse | IData> {
@@ -17,10 +20,27 @@ export class AuthenticationMiddleware implements IMiddleware {
       };
     }
 
-    return {
-      data: {
-        accountId: "213",
-      },
-    };
+    try {
+      const [bearer, token] = authorization.split(" ");
+
+      if (bearer !== "Bearer") {
+        throw new Error();
+      }
+
+      const payload = verify(token, env.jwtSecret);
+
+      return {
+        data: {
+          accountId: payload.sub,
+        },
+      };
+    } catch (error) {
+      return {
+        statusCode: 401,
+        body: {
+          error: "Invalid Access Token",
+        },
+      };
+    }
   }
 }
